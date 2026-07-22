@@ -83,6 +83,7 @@ void makeMainWindow(Server &NetworkStuff, int client) {
       NetworkStuff.sendValue(client, sendMessage.c_str());
 
       sendMessage = "";
+      writeMessage = 1;
       clrtoeol();
     }
     refresh();
