@@ -94,7 +94,6 @@ void makeMainWindow(Server &NetworkStuff, int client) {
       writeHeigth -= 3;
       sendMessage = "";
       writeMessage = 1;
-      clrtoeol();
     }
     refresh();
   }
