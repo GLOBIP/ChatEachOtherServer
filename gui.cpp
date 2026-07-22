@@ -16,6 +16,12 @@ WINDOW *create_newwin(int height, int width, int starty, int startx) {
 
   return local_win;
 }
+void drawOnScreen(int startx, int starty, const char *msg) {
+  move(starty, startx);
+  refresh();
+  printw(msg);
+  refresh();
+}
 void destroy_win(WINDOW *local_win) {
 
   wborder(local_win, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ');
@@ -75,13 +81,17 @@ void makeMainWindow(Server &NetworkStuff, int client) {
   refresh();
   under_win = create_newwin(5, width, LINES - 5, startx);
   refresh();
+  int left = startx + 2;
+  int right = width - 4;
+  int writeHeigth = LINES - 6;
   short writeMessage{1};
   while (writeMessage) {
 
     catchKeyboard(startx, LINES - 3, sendMessage, writeMessage);
     if (writeMessage == 2) {
       NetworkStuff.sendValue(client, sendMessage.c_str());
-
+      drawOnScreen(left, writeHeigth, sendMessage.c_str());
+      writeHeigth -= 3;
       sendMessage = "";
       writeMessage = 1;
       clrtoeol();
