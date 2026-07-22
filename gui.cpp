@@ -44,13 +44,14 @@ void makeWindow() {
 
 // MAIN WINDOW
 void catchKeyboard(int startx, int starty, std::string &sendMessage,
-                   bool &message) {
+                   short &message) {
   int letter;
 
   letter = getch();
-  if (letter == 10 || letter == KEY_ENTER)
-    message = false;
-  else if (letter == 127 || letter == KEY_BACKSPACE) {
+  if (letter == 10 || letter == KEY_ENTER) {
+    message = 2;
+    return;
+  } else if (letter == 127 || letter == KEY_BACKSPACE) {
     if (!sendMessage.empty())
       sendMessage.pop_back();
   } else if (letter != ERR)
@@ -74,13 +75,18 @@ void makeMainWindow(Server &NetworkStuff, int client) {
   refresh();
   under_win = create_newwin(5, width, LINES - 5, startx);
   refresh();
-  bool writeMessage{true};
+  short writeMessage{1};
   while (writeMessage) {
 
     catchKeyboard(startx, LINES - 3, sendMessage, writeMessage);
+    if (writeMessage == 2) {
+      NetworkStuff.sendValue(client, sendMessage.c_str());
+
+      sendMessage = "";
+      clrtoeol();
+    }
     refresh();
   }
-  NetworkStuff.sendValue(client, sendMessage.c_str());
   getch();
 
   destroy_win(under_win);
