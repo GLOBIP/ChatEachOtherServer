@@ -56,10 +56,11 @@ void catchKeyboard(int startx, int starty, std::string &sendMessage,
   } else if (letter != ERR)
     sendMessage.push_back(letter);
   clrtoeol();
+  move(starty, startx + 2);
   mvprintw(starty, startx + 2, sendMessage.c_str());
   refresh();
 }
-void makeMainWindow() {
+void makeMainWindow(Server &NetworkStuff, int client) {
   WINDOW *new_win;
   WINDOW *under_win;
   int startx, starty, width, height;
@@ -67,7 +68,7 @@ void makeMainWindow() {
   height = LINES - 5;
   width = COLS - 10;
   starty = 5; /* Calculating for a center placement */
-  std::string sendMessage = ",";
+  std::string sendMessage = "";
   startx = 10; /* of the window		*/
   new_win = create_newwin(height, width, starty, startx);
   refresh();
@@ -79,16 +80,19 @@ void makeMainWindow() {
     catchKeyboard(startx, LINES - 3, sendMessage, writeMessage);
     refresh();
   }
+  NetworkStuff.sendValue(client, sendMessage.c_str());
+  getch();
 
   destroy_win(under_win);
   destroy_win(new_win);
 }
 
-void GUI::guiFunc() {
+void GUI::guiFunc(Server &NetworkStuff, int client) {
+
   initscr();
   noecho();
   makeWindow();
-  makeMainWindow();
+  makeMainWindow(NetworkStuff, client);
 
   endwin();
 }
