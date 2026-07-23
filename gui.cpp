@@ -67,7 +67,7 @@ void catchKeyboard(int startx, int starty, std::string &sendMessage,
   mvprintw(starty, startx + 2, sendMessage.c_str());
   refresh();
 }
-void makeMainWindow(Server &NetworkStuff, int client) {
+void makeMainWindow(Server &NetworkStuff, int client, files &myfiles) {
   WINDOW *new_win;
   WINDOW *under_win;
   int startx, starty, width, height;
@@ -90,6 +90,7 @@ void makeMainWindow(Server &NetworkStuff, int client) {
     catchKeyboard(startx, LINES - 3, sendMessage, writeMessage);
     if (writeMessage == 2) {
       NetworkStuff.sendValue(client, sendMessage.c_str());
+      myfiles.sendFile(sendMessage);
       drawOnScreen(left, writeHeigth, sendMessage.c_str());
       writeHeigth -= 3;
       sendMessage = "";
@@ -108,7 +109,7 @@ void GUI::guiFunc(Server &NetworkStuff, int client) {
   initscr();
   noecho();
   makeWindow();
-  makeMainWindow(NetworkStuff, client);
+  makeMainWindow(NetworkStuff, client, myfiles);
 
   endwin();
 }

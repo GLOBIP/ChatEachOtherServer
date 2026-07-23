@@ -10,7 +10,14 @@ public:
   int initilizeNetwork();
 };
 
+class files {
+public:
+  void sendFile(std::string message);
+  void readFile();
+};
 class GUI {
+  files myfiles;
+
 public:
   void guiFunc(Server &NetworkStuff, int client);
 };
