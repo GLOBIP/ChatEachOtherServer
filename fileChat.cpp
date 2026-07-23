@@ -14,4 +14,5 @@ void files::sendFile(std::string message) {
 
   message.push_back('\n');
   fileWrite.write(message.c_str(), message.size());
+  fileWrite.close();
 }
