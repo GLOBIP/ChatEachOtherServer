@@ -12,11 +12,19 @@ public:
 
 class files {
 public:
-  void sendFile(std::string message);
+  void sendFileServer(std::string message);
+  void sendFileClient(std::string message);
   void readFile();
+};
+
+class windowFileRelated {
+public:
+  void putReadIntoScreen(std::string message, int left, int right, int &starty);
+  void drawOnScreen(int startx, int starty, const char *msg);
 };
 class GUI {
   files myfiles;
+  windowFileRelated myWindow;
 
 public:
   void guiFunc(Server &NetworkStuff, int client);

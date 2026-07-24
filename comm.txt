@@ -1,7 +1,24 @@
+Client
+Thu Jul 23 20:36:43 2026
 siema
-jak tam?
-byczku mój
+Client
+Thu Jul 23 20:36:51 2026
+a to ta sigma
+Server
+Thu Jul 23 20:36:55 2026
+znam
+Client
+Thu Jul 23 21:43:48 2026
 siema
-dobrze dobrze
-siema klient!
-wiem wiem
+Server
+Thu Jul 23 21:50:01 2026
+siema
+Client
+Fri Jul 24 13:37:15 2026
+siema
+Client
+Fri Jul 24 13:37:46 2026
+siema
+Client
+Fri Jul 24 13:42:49 2026
+siema

@@ -67,32 +67,38 @@ void catchKeyboard(int startx, int starty, std::string &sendMessage,
   mvprintw(starty, startx + 2, sendMessage.c_str());
   refresh();
 }
-void makeMainWindow(Server &NetworkStuff, int client, files &myfiles) {
-  WINDOW *new_win;
-  WINDOW *under_win;
-  int startx, starty, width, height;
-  int ch;
-  height = LINES - 5;
-  width = COLS - 10;
-  starty = 5; /* Calculating for a center placement */
-  std::string sendMessage = "";
-  startx = 10; /* of the window		*/
-  new_win = create_newwin(height, width, starty, startx);
-  refresh();
-  under_win = create_newwin(5, width, LINES - 5, startx);
-  refresh();
+struct WindowParts {
+
+  int height = LINES - 5;
+  int width = COLS - 10;
+  int starty = 5;
+  int startx = 10;
   int left = startx + 2;
   int right = width - 4;
+};
+
+void makeMainWindow(Server &NetworkStuff, windowFileRelated &WindowRelated,
+                    int client, files &myfiles) {
+  WINDOW *new_win;
+  WINDOW *under_win;
+  WindowParts windowVariables;
   int writeHeigth = LINES - 6;
   short writeMessage{1};
+  std::string sendMessage = "";
+  new_win = create_newwin(windowVariables.height, windowVariables.width,
+                          windowVariables.starty, windowVariables.startx);
+  refresh();
+  under_win = create_newwin(5, windowVariables.width, windowVariables.height,
+                            windowVariables.startx);
+  refresh();
   while (writeMessage) {
 
-    catchKeyboard(startx, LINES - 3, sendMessage, writeMessage);
+    catchKeyboard(windowVariables.startx, LINES - 3, sendMessage, writeMessage);
     if (writeMessage == 2) {
       NetworkStuff.sendValue(client, sendMessage.c_str());
-      myfiles.sendFile(sendMessage);
-      drawOnScreen(left, writeHeigth, sendMessage.c_str());
-      writeHeigth -= 3;
+      myfiles.sendFileClient(sendMessage);
+      WindowRelated.putReadIntoScreen(sendMessage, windowVariables.left,
+                                      windowVariables.right, writeHeigth);
       sendMessage = "";
       writeMessage = 1;
     }
@@ -109,7 +115,7 @@ void GUI::guiFunc(Server &NetworkStuff, int client) {
   initscr();
   noecho();
   makeWindow();
-  makeMainWindow(NetworkStuff, client, myfiles);
+  makeMainWindow(NetworkStuff, myWindow, client, myfiles);
 
   endwin();
 }
