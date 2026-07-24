@@ -10,6 +10,7 @@ void checkRead(char &Who, std::string zdanie) {
   else if (zdanie == "Server")
     Who = 'S';
 }
+
 void windowFileRelated::putReadIntoScreen(std::string message, int &starty,
                                           WindowParts *MyParts) {
 
@@ -17,8 +18,18 @@ void windowFileRelated::putReadIntoScreen(std::string message, int &starty,
   int y{};
   std::string zdanie = "";
   char WhosMessage{};
+  bool isSecondTime{false};
   while (std::getline(plikOtworz, zdanie)) {
     checkRead(WhosMessage, zdanie);
+    bool clientServerOr = (zdanie == "Client" || zdanie == "Server");
+    if (clientServerOr) {
+      isSecondTime = true;
+      continue;
+    }
+    if (isSecondTime) {
+      isSecondTime = false;
+      continue;
+    }
 
     if (WhosMessage == 'C')
       drawOnScreen(MyParts->left, MyParts, starty, zdanie.c_str());
