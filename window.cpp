@@ -1,15 +1,17 @@
 
 #include "ncurses.h"
 #include "server.h"
+#include <cstring>
 #include <fstream>
+#include <unistd.h>
 void checkRead(char &Who, std::string zdanie) {
   if (zdanie == "Client")
     Who = 'C';
   else if (zdanie == "Server")
     Who = 'S';
 }
-void windowFileRelated::putReadIntoScreen(std::string message, int left,
-                                          int right, int &starty) {
+void windowFileRelated::putReadIntoScreen(std::string message, int &starty,
+                                          WindowParts *MyParts) {
 
   std::ifstream plikOtworz("comm.txt", std::ios::in);
   int y{};
@@ -19,16 +21,33 @@ void windowFileRelated::putReadIntoScreen(std::string message, int left,
     checkRead(WhosMessage, zdanie);
 
     if (WhosMessage == 'C')
-      drawOnScreen(left, starty, zdanie.c_str());
+      drawOnScreen(MyParts->left, MyParts, starty, zdanie.c_str());
     else if (WhosMessage == 'S')
 
-      drawOnScreen(right, starty, zdanie.c_str());
+      drawOnScreen(MyParts->right, MyParts, starty, zdanie.c_str());
     starty -= 1;
   }
   refresh();
 }
-void windowFileRelated::drawOnScreen(int startx, int starty, const char *msg) {
-  move(starty, startx);
+void windowFileRelated::drawOnScreen(int side, WindowParts *MyParts, int starty,
+                                     const char *msg) {
+
+  int right = MyParts->startx + MyParts->width;
+  /*
+if (side + strlen(msg) >= right) {
+  int times = 1;
+  for (int i{}; i <= times; i++)
+    side -= 4;
+}*/
+  for (;;) {
+    if (side + strlen(msg) >= right) {
+      side--;
+    } else {
+      break;
+    }
+  }
+
+  move(starty, side);
   refresh();
   printw(msg);
   refresh();
