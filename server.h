@@ -16,8 +16,8 @@ class windowShowProgra {
 public:
   void drawOnScreen(int startx, int starty, const char *msg);
   void destroy_win(WINDOW *local_win);
-  void catchKeyboard(int startx, int starty, std::string &sendMessage,
-                     short &message);
+  void catchKeyboard(WindowParts under_winParts, std::string &sendMessage,
+                     short &message, WINDOW *under_win);
 };
 class files {
 public:
@@ -28,10 +28,10 @@ public:
 
 class windowFileRelated {
 public:
-  void putReadIntoScreen(std::string message, int &starty,
-                         WindowParts *MyParts);
+  void putReadIntoScreen(std::string message, int &starty, WindowParts *MyParts,
+                         WINDOW *new_win);
   void drawOnScreen(int side, WindowParts *MyParts, int &starty,
-                    const char *msg);
+                    const char *msg, WINDOW *new_win);
 };
 struct WindowParts {
 
@@ -41,6 +41,7 @@ struct WindowParts {
   int startx = 10;
   int left = startx + 2;
   int right = width - 4;
+  int under_window_height = 5;
 };
 class GUI {
 

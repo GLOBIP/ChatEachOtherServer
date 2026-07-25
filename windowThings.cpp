@@ -13,8 +13,9 @@ void windowShowProgra::destroy_win(WINDOW *local_win) {
   wrefresh(local_win);
   delwin(local_win);
 }
-void windowShowProgra::catchKeyboard(int startx, int starty,
-                                     std::string &sendMessage, short &message) {
+void windowShowProgra::catchKeyboard(WindowParts under_winParts,
+                                     std::string &sendMessage, short &message,
+                                     WINDOW *under_win) {
   int letter;
 
   letter = getch();
@@ -27,7 +28,8 @@ void windowShowProgra::catchKeyboard(int startx, int starty,
   } else if (letter != ERR)
     sendMessage.push_back(letter);
   clrtoeol();
-  move(starty, startx + 2);
-  mvprintw(starty, startx + 2, sendMessage.c_str());
-  refresh();
+  wmove(under_win, under_winParts.under_window_height / 2, 1);
+  mvwprintw(under_win, under_winParts.under_window_height / 2, 1,
+            sendMessage.c_str());
+  wrefresh(under_win);
 }

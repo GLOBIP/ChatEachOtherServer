@@ -5,14 +5,6 @@
 #include <ncurses.h>
 #include <string>
 
-struct BasicWindowVars {
-  int height = 10;
-  int width = 30;
-  int starty = (LINES - height) / 2; /* Calculating for a center placement */
-  int startx = (COLS - width) / 2;   /* of the window		*/
-  const char *message1 = "Welcome to Server";
-  const char *message2 = "Press a key to continue";
-};
 WINDOW *create_newwin(int height, int width, int starty, int startx) {
   WINDOW *local_win;
 
@@ -26,10 +18,17 @@ WINDOW *create_newwin(int height, int width, int starty, int startx) {
 }
 
 void makeWindow(windowShowProgra &myWindowProgram) {
-
+  struct FirstIpWindow {
+    int height = 10;
+    int width = 30;
+    int starty = (LINES - height) / 2; /* Calculating for a center placement */
+    int startx = (COLS - width) / 2;   /* of the window		*/
+    const char *message1 = "Welcome to Server";
+    const char *message2 = "Press a key to continue";
+  };
   WINDOW *my_win;
 
-  BasicWindowVars VarsWindow;
+  FirstIpWindow VarsWindow;
 
   refresh();
   my_win = create_newwin(VarsWindow.height, VarsWindow.width, VarsWindow.starty,
@@ -60,21 +59,25 @@ void makeMainWindow(Server &NetworkStuff, windowFileRelated &WindowRelated,
   new_win = create_newwin(windowVariables.height, windowVariables.width,
                           windowVariables.starty, windowVariables.startx);
   refresh();
-  under_win = create_newwin(5, windowVariables.width, windowVariables.height,
-                            windowVariables.startx);
-  refresh();
+  under_win =
+      create_newwin(windowVariables.under_window_height, windowVariables.width,
+                    windowVariables.height, windowVariables.startx);
+  nodelay(new_win, true);
+  int textHeight = windowVariables.height - 15;
+  WindowRelated.putReadIntoScreen(sendMessage, textHeight, cptr, new_win);
+  wrefresh(new_win);
   while (writeMessage) {
 
-    myWindowProgram.catchKeyboard(windowVariables.startx, LINES - 3,
-                                  sendMessage, writeMessage);
+    myWindowProgram.catchKeyboard(windowVariables, sendMessage, writeMessage,
+                                  under_win);
     if (writeMessage == 2) {
       NetworkStuff.sendValue(client, sendMessage.c_str());
       myfiles.sendFileClient(sendMessage);
-      WindowRelated.putReadIntoScreen(sendMessage, writeHeigth, cptr);
       sendMessage = "";
       writeMessage = 1;
     }
-    refresh();
+    wclrtoeol(under_win);
+    wrefresh(under_win);
   }
   getch();
 

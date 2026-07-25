@@ -13,8 +13,9 @@ void checkRead(char &Who, std::string zdanie) {
     Who = 'S';
 }
 
-void windowFileRelated::putReadIntoScreen(std::string message, int &starty,
-                                          WindowParts *MyParts) {
+void windowFileRelated::putReadIntoScreen(std::string message, int &height,
+                                          WindowParts *MyParts,
+                                          WINDOW *new_win) {
 
   std::ifstream plikOtworz("comm.txt", std::ios::in);
   int y{};
@@ -34,35 +35,36 @@ void windowFileRelated::putReadIntoScreen(std::string message, int &starty,
     }
 
     if (WhosMessage == 'C')
-      drawOnScreen(MyParts->left, MyParts, starty, zdanie.c_str());
+      drawOnScreen(MyParts->left, MyParts, height, zdanie.c_str(), new_win);
     else if (WhosMessage == 'S')
 
-      drawOnScreen(MyParts->right, MyParts, starty, zdanie.c_str());
-    starty -= 1;
+      drawOnScreen(MyParts->right, MyParts, height, zdanie.c_str(), new_win);
+    height -= 1;
   }
-  refresh();
+  wrefresh(new_win);
 }
 void windowFileRelated::drawOnScreen(int side, WindowParts *MyParts,
-                                     int &starty, const char *msg) {
+                                     int &height, const char *msg,
+                                     WINDOW *new_win) {
 
   std::string tekst = msg;
   int primarySide = side;
   std::string tekst2 = "";
   std::vector<std::string> tesktWriteVec = {};
   std::vector<int> sideVec = {};
-  std::vector<int> startyVec = {};
+  std::vector<int> heightVec = {};
   int right = MyParts->startx + MyParts->width;
   int middlescr = MyParts->startx + MyParts->width / 2;
   for (;;) {
-    while (starty + 2 > MyParts->height) { // some magic way MyParts.height is
+    while (height + 2 > MyParts->height) { // some magic way MyParts.height is
                                            // starting point of text tab lmao
-      starty -= 2;
+      height -= 2;
     }
     if (side + tekst.size() >= right) {
       side--;
       continue;
     } else if (side < middlescr && primarySide > middlescr) {
-      starty++;
+      height++;
       side = middlescr + 2;
       int middle = 80;                  // TO MUSI BYC SKALOWALNE
                                         // ŹLE ROZDZIELAMY Z MIDDLE
@@ -71,10 +73,10 @@ void windowFileRelated::drawOnScreen(int side, WindowParts *MyParts,
                                         /*
                                   tesktWriteVec.push_back(tekst2);
                                   sideVec.push_back(side);
-                                  startyVec.push_back(starty);*/
+                                  heightVec.push_back(starty);*/
 
     } else if (side + tekst.size() > middlescr && primarySide < middlescr) {
-      starty++;
+      height++;
       side = primarySide;
       int middle = 80;                  // TO MUSI BYC SKALOWALNE
                                         // ŹLE ROZDZIELAMY Z MIDDLE
@@ -83,12 +85,12 @@ void windowFileRelated::drawOnScreen(int side, WindowParts *MyParts,
                                         /*
                                   tesktWriteVec.push_back(tekst2);
                                   sideVec.push_back(side);
-                                  startyVec.push_back(starty);*/
+                                  heightVec.push_back(starty);*/
 
     } else {
       tesktWriteVec.push_back(tekst);
       sideVec.push_back(side);
-      startyVec.push_back(starty);
+      heightVec.push_back(height);
       break;
     }
 
@@ -98,12 +100,13 @@ void windowFileRelated::drawOnScreen(int side, WindowParts *MyParts,
 
     tesktWriteVec.push_back(tekst2);
     sideVec.push_back(side);
-    startyVec.push_back(starty);
+    heightVec.push_back(height);
   }
   for (int i{}; i < tesktWriteVec.size(); i++) {
-    move(startyVec.at(i), sideVec.at(i));
-    refresh();
-    printw(tesktWriteVec.at(i).c_str());
-    refresh();
+    wmove(new_win, heightVec.at(i), sideVec.at(i));
+    wrefresh(new_win);
+    wprintw(new_win, tesktWriteVec.at(i).c_str());
+    //    wprintw(tesktWriteVec.at(i).c_str());
+    wrefresh(new_win);
   }
 }
