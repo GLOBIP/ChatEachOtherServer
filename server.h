@@ -30,7 +30,7 @@ class windowFileRelated {
 public:
   void putReadIntoScreen(std::string message, int &starty,
                          WindowParts *MyParts);
-  void drawOnScreen(int side, WindowParts *MyParts, int starty,
+  void drawOnScreen(int side, WindowParts *MyParts, int &starty,
                     const char *msg);
 };
 struct WindowParts {

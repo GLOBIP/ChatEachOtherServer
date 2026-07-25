@@ -4,6 +4,7 @@
 #include <cstring>
 #include <fstream>
 #include <unistd.h>
+#include <vector>
 void checkRead(char &Who, std::string zdanie) {
   if (zdanie == "Client")
     Who = 'C';
@@ -40,26 +41,53 @@ void windowFileRelated::putReadIntoScreen(std::string message, int &starty,
   }
   refresh();
 }
-void windowFileRelated::drawOnScreen(int side, WindowParts *MyParts, int starty,
-                                     const char *msg) {
+void windowFileRelated::drawOnScreen(int side, WindowParts *MyParts,
+                                     int &starty, const char *msg) {
 
+  std::string tekst = msg;
+  int primarySide = side;
+  std::string tekst2 = "";
+  std::vector<std::string> tesktWriteVec = {};
+  std::vector<int> sideVec = {};
+  std::vector<int> startyVec = {};
   int right = MyParts->startx + MyParts->width;
-  /*
-if (side + strlen(msg) >= right) {
-  int times = 1;
-  for (int i{}; i <= times; i++)
-    side -= 4;
-}*/
+  int middlescr = MyParts->startx + MyParts->width / 2;
   for (;;) {
-    if (side + strlen(msg) >= right) {
+    if (side + tekst.size() >= right) {
       side--;
+    } else if (side < middlescr && primarySide > middlescr) {
+      starty++;
+      side = middlescr + 2;
+      int middle = 80;                  // TO MUSI BYC SKALOWALNE
+                                        // ŹLE ROZDZIELAMY Z MIDDLE
+      tekst2 = tekst.substr(0, middle); // TO TEZ SLABE
+      tekst.erase(0, middle);           // TO JEST SLABE
+      tesktWriteVec.push_back(tekst2);
+      sideVec.push_back(side);
+      startyVec.push_back(starty);
+
+    } else if (side + tekst.size() > middlescr && primarySide < middlescr) {
+      starty++;
+      side = primarySide;
+      int middle = 80;                  // TO MUSI BYC SKALOWALNE
+                                        // ŹLE ROZDZIELAMY Z MIDDLE
+      tekst2 = tekst.substr(0, middle); // TO TEZ SLABE
+      tekst.erase(0, middle);           // TO JEST SLABE
+      tesktWriteVec.push_back(tekst2);
+      sideVec.push_back(side);
+      startyVec.push_back(starty);
+
     } else {
+      tesktWriteVec.push_back(tekst);
+      sideVec.push_back(side);
+      startyVec.push_back(starty);
       break;
     }
   }
-
-  move(starty, side);
-  refresh();
-  printw(msg);
-  refresh();
+  for (int i{}; i < tesktWriteVec.size(); i++) {
+    move(startyVec.at(i), sideVec.at(i));
+    refresh();
+    printw(tesktWriteVec.at(i).c_str());
+    refresh();
+  }
 }
