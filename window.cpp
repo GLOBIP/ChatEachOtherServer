@@ -57,10 +57,11 @@ void windowFileRelated::drawOnScreen(int side, WindowParts *MyParts,
   int right = MyParts->width;
   int middlescr = MyParts->width / 2;
   for (;;) {
-    while (height + 2 > MyParts->upper_window_height) { // THIS IS NOT GOOD
-      // starting point of text tab lmao
-      height -= 2;
-    }
+    /*
+while (height + 2 > MyParts->upper_window_height) { // THIS IS NOT GOOD
+  // starting point of text tab lmao
+  height -= 2;
+}*/
 
     if (side + tekst.size() >= right) {
       side--;
@@ -104,6 +105,8 @@ void windowFileRelated::drawOnScreen(int side, WindowParts *MyParts,
     if (heightVec.at(i) < 1) {
       continue;
       // text is too height , save it in another file?
+    } else if (heightVec.at(i) + 2 > MyParts->upper_window_height) {
+      continue;
     }
     wmove(new_win, heightVec.at(i), sideVec.at(i));
     wrefresh(new_win);
