@@ -56,8 +56,9 @@ void makeMainWindow(Server &NetworkStuff, windowFileRelated &WindowRelated,
   int writeHeigth = LINES - 6;
   short writeMessage{1};
   std::string sendMessage = "";
-  new_win = create_newwin(windowVariables.height, windowVariables.width,
-                          windowVariables.starty, windowVariables.startx);
+  new_win =
+      create_newwin(windowVariables.upper_window_height, windowVariables.width,
+                    windowVariables.starty, windowVariables.startx);
   refresh();
   under_win =
       create_newwin(windowVariables.under_window_height, windowVariables.width,
