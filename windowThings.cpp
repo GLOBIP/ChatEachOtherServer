@@ -9,23 +9,31 @@ void windowShowProgra::destroy_win(WINDOW *local_win) {
 }
 void windowShowProgra::catchKeyboard(WindowParts under_winParts,
                                      std::string &sendMessage, short &message,
-                                     WINDOW *under_win) {
+                                     WINDOW *under_win, int &textHeight) {
   int letter;
 
   letter = getch();
+
   if (letter == 10 || letter == KEY_ENTER) {
     message = 2;
     return;
   } else if (letter == 127 || letter == KEY_BACKSPACE) {
     if (!sendMessage.empty())
       sendMessage.pop_back();
-  } else if (letter != ERR)
-    sendMessage.push_back(letter);
-  else if (letter == '|')
+  } else if (letter == KEY_UP) {
+    textHeight++;
+    message = 4;
+  } else if (letter == KEY_DOWN) {
+    textHeight--;
+    message = 4;
+  } else if (letter == '|')
     message = 0;
+  else if (letter >= 32 && letter <= 127) {
+    sendMessage.push_back(letter);
+  }
   clrtoeol();
   wmove(under_win, under_winParts.under_window_height / 2, 1);
-  mvwprintw(under_win, under_winParts.under_window_height / 2, 1,
+  mvwprintw(under_win, under_winParts.under_window_height / 2, 1, "%s",
             sendMessage.c_str());
   wrefresh(under_win);
 }

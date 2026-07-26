@@ -16,7 +16,7 @@ class windowShowProgra {
 public:
   void destroy_win(WINDOW *local_win);
   void catchKeyboard(WindowParts under_winParts, std::string &sendMessage,
-                     short &message, WINDOW *under_win);
+                     short &message, WINDOW *under_win, int &textHeight);
   WINDOW *create_newwin(int height, int width, int starty, int startx);
 };
 class files {

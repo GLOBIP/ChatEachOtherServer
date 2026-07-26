@@ -101,6 +101,10 @@ void windowFileRelated::drawOnScreen(int side, WindowParts *MyParts,
     height++;
   }
   for (int i{}; i < tesktWriteVec.size(); i++) {
+    if (heightVec.at(i) < 1) {
+      continue;
+      // text is too height , save it in another file?
+    }
     wmove(new_win, heightVec.at(i), sideVec.at(i));
     wrefresh(new_win);
     wprintw(new_win, tesktWriteVec.at(i).c_str());

@@ -71,6 +71,7 @@ void makeMainWindow(Server &NetworkStuff, windowFileRelated &WindowRelated,
   nodelay(under_win, true);
   nodelay(stdscr, true);
 
+  keypad(under_win, TRUE);
   wrefresh(new_win);
   while (writeMessage) {
     std::string message1 = NetworkStuff.readValue(client);
@@ -80,7 +81,7 @@ void makeMainWindow(Server &NetworkStuff, windowFileRelated &WindowRelated,
               WindowRelated);
     }
     myWindowProgram.catchKeyboard(windowVariables, sendMessage, writeMessage,
-                                  under_win);
+                                  under_win, textHeight);
     if (writeMessage == 2) {
       NetworkStuff.sendValue(
           client, sendMessage.c_str());    // send text to be written by client
@@ -93,6 +94,11 @@ void makeMainWindow(Server &NetworkStuff, windowFileRelated &WindowRelated,
       sendMessage = "";
       writeMessage = 1;
       // end of protocol
+    } else if (writeMessage == 4) {
+      myWindowProgram.destroy_win(new_win); // show chat protocol
+      putText(myWindowProgram, cptr, textHeight, sendMessage, new_win,
+              WindowRelated);
+      writeMessage = 1;
     }
     wclrtoeol(under_win);
     wrefresh(under_win);
@@ -106,7 +112,9 @@ void makeMainWindow(Server &NetworkStuff, windowFileRelated &WindowRelated,
 void GUI::guiFunc(Server &NetworkStuff, int client) {
 
   initscr();
+  keypad(stdscr, TRUE);
   noecho();
+  cbreak();
   makeWindow(myWindowProgram);
   makeMainWindow(NetworkStuff, myWindow, client, myfiles, myWindowProgram);
 

@@ -14,7 +14,10 @@ int Server::initilizeNetwork() {
   // specifying the address
   sockaddr_in serverAddress;
   serverAddress.sin_family = AF_INET;
-  serverAddress.sin_port = htons(49159);
+  long port = 49158;
+  std::cout << "current: " << port << '\n';
+  std::cin >> port;
+  serverAddress.sin_port = htons(port);
   serverAddress.sin_addr.s_addr = INADDR_ANY;
 
   // binding socket.
