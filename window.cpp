@@ -13,7 +13,7 @@ void checkRead(char &Who, std::string zdanie) {
     Who = 'S';
 }
 
-void windowFileRelated::putReadIntoScreen(std::string message, int &height,
+void windowFileRelated::putReadIntoScreen(std::string message, int height,
                                           WindowParts *MyParts,
                                           WINDOW *new_win) {
 

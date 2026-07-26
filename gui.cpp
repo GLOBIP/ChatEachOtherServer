@@ -5,18 +5,6 @@
 #include <ncurses.h>
 #include <string>
 
-WINDOW *create_newwin(int height, int width, int starty, int startx) {
-  WINDOW *local_win;
-
-  local_win = newwin(height, width, starty, startx);
-  box(local_win, 0, 0); /* 0, 0 gives default characters
-                         * for the vertical and horizontal
-                         * lines			*/
-  wrefresh(local_win);  /* Show that box 		*/
-
-  return local_win;
-}
-
 void makeWindow(windowShowProgra &myWindowProgram) {
   struct FirstIpWindow {
     int height = 10;
@@ -31,8 +19,9 @@ void makeWindow(windowShowProgra &myWindowProgram) {
   FirstIpWindow VarsWindow;
 
   refresh();
-  my_win = create_newwin(VarsWindow.height, VarsWindow.width, VarsWindow.starty,
-                         VarsWindow.startx);
+
+  my_win = myWindowProgram.create_newwin(VarsWindow.height, VarsWindow.width,
+                                         VarsWindow.starty, VarsWindow.startx);
   refresh();
   mvprintw(VarsWindow.starty + 1,
            VarsWindow.startx + strlen(VarsWindow.message1) / 2,
@@ -45,7 +34,15 @@ void makeWindow(windowShowProgra &myWindowProgram) {
 }
 
 // MAIN WINDOW
-
+void putText(windowShowProgra &myWindowProgram, WindowParts *windowVariables,
+             int height, std::string message, WINDOW *&new_win,
+             windowFileRelated &WindowRelated) {
+  new_win = myWindowProgram.create_newwin(
+      windowVariables->upper_window_height, windowVariables->width,
+      windowVariables->starty, windowVariables->startx);
+  WindowRelated.putReadIntoScreen(message, height, windowVariables, new_win);
+  wrefresh(new_win);
+}
 void makeMainWindow(Server &NetworkStuff, windowFileRelated &WindowRelated,
                     int client, files &myfiles,
                     windowShowProgra &myWindowProgram) {
@@ -56,17 +53,16 @@ void makeMainWindow(Server &NetworkStuff, windowFileRelated &WindowRelated,
   int writeHeigth = LINES - 6;
   short writeMessage{1};
   std::string sendMessage = "";
-  new_win =
-      create_newwin(windowVariables.upper_window_height, windowVariables.width,
-                    windowVariables.starty, windowVariables.startx);
-  refresh();
-  under_win =
-      create_newwin(windowVariables.under_window_height, windowVariables.width,
-                    windowVariables.height, windowVariables.startx);
-  nodelay(new_win, true);
   int textHeight = windowVariables.height - 15;
-  WindowRelated.putReadIntoScreen(sendMessage, textHeight, cptr, new_win);
-  wrefresh(new_win);
+  putText(myWindowProgram, cptr, textHeight, sendMessage, new_win,
+          WindowRelated);
+
+  refresh();
+  under_win = myWindowProgram.create_newwin(
+      windowVariables.under_window_height, windowVariables.width,
+      windowVariables.height, windowVariables.startx);
+  nodelay(new_win, true);
+
   while (writeMessage) {
 
     myWindowProgram.catchKeyboard(windowVariables, sendMessage, writeMessage,
@@ -74,6 +70,11 @@ void makeMainWindow(Server &NetworkStuff, windowFileRelated &WindowRelated,
     if (writeMessage == 2) {
       NetworkStuff.sendValue(client, sendMessage.c_str());
       myfiles.sendFileClient(sendMessage);
+
+      myWindowProgram.destroy_win(new_win);
+      putText(myWindowProgram, cptr, textHeight, sendMessage, new_win,
+              WindowRelated);
+
       sendMessage = "";
       writeMessage = 1;
     }

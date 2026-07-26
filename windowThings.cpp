@@ -1,12 +1,6 @@
 #include "ncurses.h"
 #include "server.h"
 
-void windowShowProgra::drawOnScreen(int startx, int starty, const char *msg) {
-  move(starty, startx);
-  refresh();
-  printw(msg);
-  refresh();
-}
 void windowShowProgra::destroy_win(WINDOW *local_win) {
 
   wborder(local_win, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ');
@@ -32,4 +26,16 @@ void windowShowProgra::catchKeyboard(WindowParts under_winParts,
   mvwprintw(under_win, under_winParts.under_window_height / 2, 1,
             sendMessage.c_str());
   wrefresh(under_win);
+}
+WINDOW *windowShowProgra::create_newwin(int height, int width, int starty,
+                                        int startx) {
+  WINDOW *local_win;
+
+  local_win = newwin(height, width, starty, startx);
+  box(local_win, 0, 0); /* 0, 0 gives default characters
+                         * for the vertical and horizontal
+                         * lines			*/
+  wrefresh(local_win);  /* Show that box 		*/
+
+  return local_win;
 }

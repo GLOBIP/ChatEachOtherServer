@@ -14,10 +14,10 @@ public:
 
 class windowShowProgra {
 public:
-  void drawOnScreen(int startx, int starty, const char *msg);
   void destroy_win(WINDOW *local_win);
   void catchKeyboard(WindowParts under_winParts, std::string &sendMessage,
                      short &message, WINDOW *under_win);
+  WINDOW *create_newwin(int height, int width, int starty, int startx);
 };
 class files {
 public:
@@ -28,7 +28,7 @@ public:
 
 class windowFileRelated {
 public:
-  void putReadIntoScreen(std::string message, int &starty, WindowParts *MyParts,
+  void putReadIntoScreen(std::string message, int starty, WindowParts *MyParts,
                          WINDOW *new_win);
   void drawOnScreen(int side, WindowParts *MyParts, int &starty,
                     const char *msg, WINDOW *new_win);
