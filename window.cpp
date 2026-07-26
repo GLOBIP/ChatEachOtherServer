@@ -14,14 +14,16 @@ void checkRead(char &Who, std::string zdanie) {
 }
 
 void windowFileRelated::putReadIntoScreen(std::string message, int height,
-                                          WindowParts *MyParts,
-                                          WINDOW *new_win) {
+                                          WindowParts *MyParts, WINDOW *new_win,
+                                          int &bottomheightChat) {
 
   std::ifstream plikOtworz("comm.txt", std::ios::in);
   int y{};
+  int originHeight = height;
   std::string zdanie = "";
   char WhosMessage{};
   bool isSecondTime{false};
+  int countLine{0};
   while (std::getline(plikOtworz, zdanie)) {
     checkRead(WhosMessage, zdanie);
     bool clientServerOr = (zdanie == "Client" || zdanie == "Server");
@@ -41,7 +43,11 @@ if (isSecondTime) {
 
       drawOnScreen(MyParts->right, MyParts, height, zdanie.c_str(), new_win);
     height += 1;
+
+    countLine--;
   }
+  // std::cout << "POWINNO BYĆ -170 a jest " << countLine << std::endl;
+  bottomheightChat = countLine + 5;
   wrefresh(new_win);
 }
 void windowFileRelated::drawOnScreen(int side, WindowParts *MyParts,
@@ -75,7 +81,7 @@ while (height + 2 > MyParts->upper_window_height) { // THIS IS NOT GOOD
                                         /*
                                   tesktWriteVec.push_back(tekst2);
                                   sideVec.push_back(side);
-                                  heightVec.push_back(starty);*/
+    1                              heightVec.push_back(starty);*/
 
     } else if (side + tekst.size() > middlescr && primarySide < middlescr) {
       side = primarySide;

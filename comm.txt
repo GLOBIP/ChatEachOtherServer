@@ -117,3 +117,78 @@ Sun Jul 26 20:14:49 2026
 Server
 Sun Jul 26 20:16:43 2026
 hello
+Server
+Sun Jul 26 22:48:01 2026
+hello
+Client
+Sun Jul 26 22:48:15 2026
+siema
+Server
+Sun Jul 26 22:48:19 2026
+o siema
+Server
+Sun Jul 26 22:48:21 2026
+jak tam?
+Client
+Sun Jul 26 22:48:26 2026
+no dobrze
+Client
+Sun Jul 26 22:48:30 2026
+dobrze
+Server
+Sun Jul 26 22:48:43 2026
+no to dobrze
+Client
+Sun Jul 26 22:48:47 2026
+no to super
+Server
+Sun Jul 26 23:13:57 2026
+hello
+Server
+Sun Jul 26 23:16:57 2026
+hello
+Server
+Sun Jul 26 23:17:35 2026
+hello
+Server
+Sun Jul 26 23:20:07 2026
+hello
+Server
+Sun Jul 26 23:23:18 2026
+hello
+Server
+Sun Jul 26 23:31:27 2026
+hello
+Server
+Sun Jul 26 23:43:42 2026
+hello
+Server
+Sun Jul 26 23:45:15 2026
+hello
+Server
+Sun Jul 26 23:49:38 2026
+hello
+Server
+Sun Jul 26 23:51:51 2026
+hello
+Server
+Sun Jul 26 23:55:12 2026
+hello
+Server
+Sun Jul 26 23:56:05 2026
+hello
+Server
+Sun Jul 26 23:56:37 2026
+hello
+Server
+Sun Jul 26 23:57:13 2026
+hello
+Server
+Sun Jul 26 23:58:05 2026
+hello
+Server
+Sun Jul 26 23:59:04 2026
+hello
+Server
+Sun Jul 26 23:59:58 2026
+hello

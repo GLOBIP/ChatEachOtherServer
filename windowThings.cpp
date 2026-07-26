@@ -9,7 +9,8 @@ void windowShowProgra::destroy_win(WINDOW *local_win) {
 }
 void windowShowProgra::catchKeyboard(WindowParts under_winParts,
                                      std::string &sendMessage, short &message,
-                                     WINDOW *under_win, int &textHeight) {
+                                     WINDOW *under_win, int &textHeight,
+                                     int bottomHeightChat) {
   int letter;
 
   letter = getch();
@@ -26,7 +27,12 @@ void windowShowProgra::catchKeyboard(WindowParts under_winParts,
   } else if (letter == KEY_DOWN) {
     textHeight--;
     message = 4;
-  } else if (letter == '|')
+  } else if (letter == KEY_RIGHT) {
+    textHeight = bottomHeightChat;
+    message = 4;
+  }
+
+  else if (letter == '|')
     message = 0;
   else if (letter >= 32 && letter <= 127) {
     sendMessage.push_back(letter);
