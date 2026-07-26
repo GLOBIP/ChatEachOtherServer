@@ -14,7 +14,7 @@ int Server::initilizeNetwork() {
   // specifying the address
   sockaddr_in serverAddress;
   serverAddress.sin_family = AF_INET;
-  serverAddress.sin_port = htons(49157);
+  serverAddress.sin_port = htons(49159);
   serverAddress.sin_addr.s_addr = INADDR_ANY;
 
   // binding socket.
@@ -32,7 +32,7 @@ void Server::closeNetwork(int clientSocket) { close(clientSocket); }
 
 std::string Server::readValue(int socket) {
   char buffer[1024] = {0};
-  ssize_t recieve = recv(socket, buffer, sizeof(buffer), 0);
+  ssize_t recieve = recv(socket, buffer, sizeof(buffer), MSG_DONTWAIT);
   std::string StringBuffer = buffer;
   return StringBuffer;
 }

@@ -43,6 +43,11 @@ void putText(windowShowProgra &myWindowProgram, WindowParts *windowVariables,
   WindowRelated.putReadIntoScreen(message, height, windowVariables, new_win);
   wrefresh(new_win);
 }
+void writeRecievedData(std::string message1, files &myfiles,
+                       windowShowProgra &myWindowProgram, WINDOW *&new_win) {
+  myfiles.sendFileServer(message1);
+  myWindowProgram.destroy_win(new_win);
+}
 void makeMainWindow(Server &NetworkStuff, windowFileRelated &WindowRelated,
                     int client, files &myfiles,
                     windowShowProgra &myWindowProgram) {
@@ -53,6 +58,7 @@ void makeMainWindow(Server &NetworkStuff, windowFileRelated &WindowRelated,
   int writeHeigth = LINES - 6;
   short writeMessage{1};
   std::string sendMessage = "";
+  curs_set(0);
   int textHeight = windowVariables.height - 15;
   putText(myWindowProgram, cptr, textHeight, sendMessage, new_win,
           WindowRelated);
@@ -62,21 +68,31 @@ void makeMainWindow(Server &NetworkStuff, windowFileRelated &WindowRelated,
       windowVariables.under_window_height, windowVariables.width,
       windowVariables.height, windowVariables.startx);
   nodelay(new_win, true);
+  nodelay(under_win, true);
+  nodelay(stdscr, true);
 
+  wrefresh(new_win);
   while (writeMessage) {
-
+    std::string message1 = NetworkStuff.readValue(client);
+    if (!message1.empty()) {
+      writeRecievedData(message1, myfiles, myWindowProgram, new_win);
+      putText(myWindowProgram, cptr, textHeight, sendMessage, new_win,
+              WindowRelated);
+    }
     myWindowProgram.catchKeyboard(windowVariables, sendMessage, writeMessage,
                                   under_win);
     if (writeMessage == 2) {
-      NetworkStuff.sendValue(client, sendMessage.c_str());
-      myfiles.sendFileClient(sendMessage);
+      NetworkStuff.sendValue(
+          client, sendMessage.c_str());    // send text to be written by client
+      myfiles.sendFileClient(sendMessage); // writes to this chat file
 
-      myWindowProgram.destroy_win(new_win);
+      myWindowProgram.destroy_win(new_win); // show chat protocol
       putText(myWindowProgram, cptr, textHeight, sendMessage, new_win,
               WindowRelated);
 
       sendMessage = "";
       writeMessage = 1;
+      // end of protocol
     }
     wclrtoeol(under_win);
     wrefresh(under_win);

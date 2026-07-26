@@ -21,6 +21,8 @@ void windowShowProgra::catchKeyboard(WindowParts under_winParts,
       sendMessage.pop_back();
   } else if (letter != ERR)
     sendMessage.push_back(letter);
+  else if (letter == '|')
+    message = 0;
   clrtoeol();
   wmove(under_win, under_winParts.under_window_height / 2, 1);
   mvwprintw(under_win, under_winParts.under_window_height / 2, 1,

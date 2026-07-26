@@ -5,34 +5,34 @@ Server
 Thu Jul 23 20:36:43 2026
 siema byczku jak tam? dobrze nie dobrze czy jakos sobie bo ja niewiem bo
 
-Client
-Sun Jul 26 13:26:49 2026
-siema
-Client
-Sun Jul 26 13:29:17 2026
-siema
+Server
+Sun Jul 26 15:50:02 2026
+hello
 
-Client
-Sun Jul 26 13:47:20 2026
+Server
+Sun Jul 26 15:58:28 2026
+hello
+Server
+Sun Jul 26 15:58:36 2026
+siema
+Server
+Sun Jul 26 15:58:42 2026
 siema
 Client
-Sun Jul 26 13:47:39 2026
+Sun Jul 26 15:58:54 2026
+sieema
+Server
+Sun Jul 26 15:59:34 2026
+hello
+Client
+Sun Jul 26 15:59:36 2026
 siema
-Client
-Sun Jul 26 13:50:03 2026
+Server
+Sun Jul 26 15:59:39 2026
 siema
+Server
+Sun Jul 26 16:01:05 2026
+hello
 Client
-Sun Jul 26 13:50:07 2026
-ola
-Client
-Sun Jul 26 13:50:10 2026
-super
-Client
-Sun Jul 26 13:56:15 2026
-OM
-Client
-Sun Jul 26 13:56:19 2026
-o siema
-Client
-Sun Jul 26 13:56:22 2026
- jak tam?
+Sun Jul 26 16:01:07 2026
+siema
