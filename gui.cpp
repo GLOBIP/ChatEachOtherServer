@@ -57,7 +57,7 @@ void makeMainWindow(Server &NetworkStuff, windowFileRelated &WindowRelated,
   WindowParts windowVariables;
   WindowParts *cptr = &windowVariables;
   int writeHeigth = LINES - 6;
-  short writeMessage{1};
+  short writeMessage{3};
   std::string sendMessage = "";
   curs_set(0);
   int textHeight = windowVariables.height - 15;
