@@ -42,6 +42,7 @@ struct WindowParts {
   int left = startx + 2;
   int right = width - 4;
   int under_window_height = 5;
+  int upper_window_height = height - 5;
 };
 class GUI {
 

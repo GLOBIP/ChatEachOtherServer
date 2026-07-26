@@ -25,14 +25,15 @@ void windowFileRelated::putReadIntoScreen(std::string message, int &height,
   while (std::getline(plikOtworz, zdanie)) {
     checkRead(WhosMessage, zdanie);
     bool clientServerOr = (zdanie == "Client" || zdanie == "Server");
-    if (clientServerOr) {
-      isSecondTime = true;
-      continue;
-    }
-    if (isSecondTime) {
-      isSecondTime = false;
-      continue;
-    }
+    /*
+if (clientServerOr) {
+  isSecondTime = true;
+  continue;
+}
+if (isSecondTime) {
+  isSecondTime = false;
+  continue;
+}*/
 
     if (WhosMessage == 'C')
       drawOnScreen(MyParts->left, MyParts, height, zdanie.c_str(), new_win);
@@ -53,18 +54,18 @@ void windowFileRelated::drawOnScreen(int side, WindowParts *MyParts,
   std::vector<std::string> tesktWriteVec = {};
   std::vector<int> sideVec = {};
   std::vector<int> heightVec = {};
-  int right = MyParts->startx + MyParts->width;
-  int middlescr = MyParts->startx + MyParts->width / 2;
+  int right = MyParts->width;
+  int middlescr = MyParts->width / 2;
   for (;;) {
-    while (height + 2 > MyParts->height) { // some magic way MyParts.height is
-                                           // starting point of text tab lmao
+    while (height + 2 > MyParts->upper_window_height) { // THIS IS NOT GOOD
+      // starting point of text tab lmao
       height -= 2;
     }
+
     if (side + tekst.size() >= right) {
       side--;
       continue;
     } else if (side < middlescr && primarySide > middlescr) {
-      height++;
       side = middlescr + 2;
       int middle = 80;                  // TO MUSI BYC SKALOWALNE
                                         // ŹLE ROZDZIELAMY Z MIDDLE
@@ -76,7 +77,6 @@ void windowFileRelated::drawOnScreen(int side, WindowParts *MyParts,
                                   heightVec.push_back(starty);*/
 
     } else if (side + tekst.size() > middlescr && primarySide < middlescr) {
-      height++;
       side = primarySide;
       int middle = 80;                  // TO MUSI BYC SKALOWALNE
                                         // ŹLE ROZDZIELAMY Z MIDDLE
@@ -88,19 +88,17 @@ void windowFileRelated::drawOnScreen(int side, WindowParts *MyParts,
                                   heightVec.push_back(starty);*/
 
     } else {
+
       tesktWriteVec.push_back(tekst);
       sideVec.push_back(side);
       heightVec.push_back(height);
       break;
     }
 
-    // push back always because if it:
-    // 1. Is too right it slides left and continuse - begin on start
-    // 2. if all ok it breaks
-
     tesktWriteVec.push_back(tekst2);
     sideVec.push_back(side);
     heightVec.push_back(height);
+    height++;
   }
   for (int i{}; i < tesktWriteVec.size(); i++) {
     wmove(new_win, heightVec.at(i), sideVec.at(i));
