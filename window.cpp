@@ -40,7 +40,7 @@ if (isSecondTime) {
     else if (WhosMessage == 'S')
 
       drawOnScreen(MyParts->right, MyParts, height, zdanie.c_str(), new_win);
-    height -= 1;
+    height += 1;
   }
   wrefresh(new_win);
 }
