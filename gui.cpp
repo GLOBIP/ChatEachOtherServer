@@ -36,12 +36,13 @@ void makeWindow(windowShowProgra &myWindowProgram) {
 // MAIN WINDOW
 void putText(windowShowProgra &myWindowProgram, WindowParts *windowVariables,
              int &height, std::string message, WINDOW *&new_win,
-             windowFileRelated &WindowRelated, int &bottomHeightChat) {
+             windowFileRelated &WindowRelated, int &bottomHeightChat,
+             windowShowProgra &CreateDestroyWin) {
   new_win = myWindowProgram.create_newwin(
       windowVariables->upper_window_height, windowVariables->width,
       windowVariables->starty, windowVariables->startx);
   WindowRelated.putReadIntoScreen(message, height, windowVariables, new_win,
-                                  bottomHeightChat);
+                                  bottomHeightChat, CreateDestroyWin);
   wrefresh(new_win);
 }
 void writeRecievedData(std::string message1, files &myfiles,
@@ -61,9 +62,10 @@ void makeMainWindow(Server &NetworkStuff, windowFileRelated &WindowRelated,
   std::string sendMessage = "";
   curs_set(0);
   int textHeight = windowVariables.height - 15;
+  int copytextHeight = textHeight;
   int bottomHeightChat{};
   putText(myWindowProgram, cptr, textHeight, sendMessage, new_win,
-          WindowRelated, bottomHeightChat);
+          WindowRelated, bottomHeightChat, myWindowProgram);
 
   refresh();
   under_win = myWindowProgram.create_newwin(
@@ -80,10 +82,11 @@ void makeMainWindow(Server &NetworkStuff, windowFileRelated &WindowRelated,
     if (!message1.empty()) {
       writeRecievedData(message1, myfiles, myWindowProgram, new_win);
       putText(myWindowProgram, cptr, textHeight, sendMessage, new_win,
-              WindowRelated, bottomHeightChat);
+              WindowRelated, bottomHeightChat, myWindowProgram);
     }
     myWindowProgram.catchKeyboard(windowVariables, sendMessage, writeMessage,
-                                  under_win, textHeight, bottomHeightChat);
+                                  under_win, textHeight, bottomHeightChat,
+                                  copytextHeight);
     if (writeMessage == 2) {
       NetworkStuff.sendValue(
           client, sendMessage.c_str());    // send text to be written by client
@@ -91,7 +94,7 @@ void makeMainWindow(Server &NetworkStuff, windowFileRelated &WindowRelated,
 
       myWindowProgram.destroy_win(new_win); // show chat protocol
       putText(myWindowProgram, cptr, textHeight, sendMessage, new_win,
-              WindowRelated, bottomHeightChat);
+              WindowRelated, bottomHeightChat, myWindowProgram);
 
       sendMessage = "";
       writeMessage = 1;
@@ -99,7 +102,7 @@ void makeMainWindow(Server &NetworkStuff, windowFileRelated &WindowRelated,
     } else if (writeMessage == 4) {
       myWindowProgram.destroy_win(new_win); // show chat protocol
       putText(myWindowProgram, cptr, textHeight, sendMessage, new_win,
-              WindowRelated, bottomHeightChat);
+              WindowRelated, bottomHeightChat, myWindowProgram);
       writeMessage = 1;
     }
     wclrtoeol(under_win);
