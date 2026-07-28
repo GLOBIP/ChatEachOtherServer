@@ -111,19 +111,28 @@ while (height + 2 > MyParts->upper_window_height) { // THIS IS NOT GOOD
     heightVec.push_back(height);
     height++;
   }
-  WINDOW *textWindow;
-  textWindow = CreateDestroyWin.create_newwin(
-      3 * tesktWriteVec.size(), tesktWriteVec.at(0).size() + 5,
-      heightVec.at(0) - 5,
-      sideVec.at(0)); // y is first height - 5 startx is sidevec
-  for (int i{}; i < tesktWriteVec.size(); i++) {
+
+  WINDOW *textWindow; // pointer do jednego okna
+
+  bool once{true};
+  for (int i{}; i < tesktWriteVec.size(); i++) { // po kawalkach tekstu lecimy
     if (heightVec.at(i) < 1) {
       continue;
       // text is too height , save it in another file?
-    } else if (heightVec.at(i) + 2 > MyParts->upper_window_height) {
+    } else if (heightVec.at(i) > MyParts->upper_window_height + 4) {
       continue;
     }
-    wmove(new_win, heightVec.at(i), sideVec.at(i));
+    if (once) {
+      textWindow = subwin(
+          new_win, 3 * tesktWriteVec.size(),
+          tesktWriteVec.at(0).size() +
+              5, // takes tekstwrite num and *3 // width is size of first plus 5
+          heightVec.at(0) - 5, // height is height of first - 5 on the top
+          sideVec.at(0));      //  and side is side
+      box(textWindow, 0, 0);   /* 0, 0 gives default characters
+                                * for the vertical and horizontal
+                                * lines			*/
+    }
 
     wrefresh(new_win);
     mvwprintw(textWindow, 1, 3, tesktWriteVec.at(i).c_str());

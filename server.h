@@ -1,6 +1,7 @@
 #pragma once
 #include "ncurses.h"
 #include <string>
+#include <vector>
 struct WindowParts;
 class Server {
 
@@ -14,6 +15,7 @@ public:
 
 class windowShowProgra {
 public:
+  std::vector<WINDOW *> local_winVec = {};
   void destroy_win(WINDOW *local_win);
   void catchKeyboard(WindowParts under_winParts, std::string &sendMessage,
                      short &message, WINDOW *under_win, int &textHeight,
