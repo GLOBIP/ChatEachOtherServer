@@ -27,7 +27,7 @@ void windowShowProgra::catchKeyboard(WindowParts under_winParts,
   } else if (letter == KEY_DOWN) {
     textHeight--;
     message = 4;
-  } else if (letter == KEY_RIGHT) {
+  } else if (letter == KEY_RIGHT || message == 3) {
     textHeight = bottomHeightChat;
     message = 4;
   } else if (letter == KEY_LEFT) {

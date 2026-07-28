@@ -300,3 +300,42 @@ hello
 Server
 Tue Jul 28 13:45:02 2026
 hello
+Server
+Tue Jul 28 15:59:51 2026
+hello
+Server
+Tue Jul 28 16:00:14 2026
+siema
+Client
+Tue Jul 28 16:00:17 2026
+o siema
+Client
+Tue Jul 28 16:00:21 2026
+halo
+Client
+Tue Jul 28 16:00:27 2026
+no siema
+Server
+Tue Jul 28 16:00:34 2026
+jak tam?
+Client
+Tue Jul 28 16:09:56 2026
+siema
+Server
+Tue Jul 28 16:10:07 2026
+siema
+Server
+Tue Jul 28 16:11:34 2026
+siema
+Server
+Tue Jul 28 16:11:36 2026
+jak tam?
+Client
+Tue Jul 28 16:12:38 2026
+dobrze
+Client
+Tue Jul 28 16:12:42 2026
+a u ciebie?
+Server
+Tue Jul 28 16:12:48 2026
+tez dobrze

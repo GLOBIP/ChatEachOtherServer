@@ -95,9 +95,9 @@ void makeMainWindow(Server &NetworkStuff, windowFileRelated &WindowRelated,
       myWindowProgram.destroy_win(new_win); // show chat protocol
       putText(myWindowProgram, cptr, textHeight, sendMessage, new_win,
               WindowRelated, bottomHeightChat, myWindowProgram);
+      writeMessage = 3;
 
       sendMessage = "";
-      writeMessage = 1;
       // end of protocol
     } else if (writeMessage == 4) {
       myWindowProgram.destroy_win(new_win); // show chat protocol

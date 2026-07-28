@@ -25,6 +25,7 @@ void windowFileRelated::putReadIntoScreen(std::string message, int height,
   char WhosMessage{};
   bool isSecondTime{false};
   int countLine{0};
+  int padding{5};
   while (std::getline(plikOtworz, zdanie)) {
     checkRead(WhosMessage, zdanie);
     bool clientServerOr = (zdanie == "Client" || zdanie == "Server");
@@ -45,12 +46,12 @@ void windowFileRelated::putReadIntoScreen(std::string message, int height,
 
       drawOnScreen(MyParts->right, MyParts, height, zdanie.c_str(), new_win,
                    CreateDestroyWin);
-    height += 5;
+    height += padding;
 
-    countLine--;
+    countLine -= padding;
   }
   // std::cout << "POWINNO BYĆ -170 a jest " << countLine << std::endl;
-  bottomheightChat = countLine + 5;
+  bottomheightChat = countLine + padding * 3;
   wrefresh(new_win);
 }
 void windowFileRelated::drawOnScreen(int side, WindowParts *MyParts,
