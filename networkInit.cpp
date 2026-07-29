@@ -16,7 +16,9 @@ int Server::initilizeNetwork(int port) {
   sockaddr_in serverAddress;
   serverAddress.sin_family = AF_INET;
   serverAddress.sin_port = htons(port);
-  serverAddress.sin_addr.s_addr = INADDR_ANY;
+  serverAddress.sin_addr.s_addr =
+      INADDR_ANY; // argument to bind that tells the socket to listen on all
+                  // available interfaces.
 
   // binding socket.
   bind(serverSocket, (struct sockaddr *)&serverAddress, sizeof(serverAddress));
@@ -25,8 +27,31 @@ int Server::initilizeNetwork(int port) {
   listen(serverSocket, 5);
 
   // accepting connection request
+  // socket accepting plus getting addres ip protocol
+  // for more check
+  // https://stackoverflow.com/questions/2064636/getting-the-source-address-of-an-incoming-socket-connection
+
+  struct sockaddr_storage addr;
+  socklen_t len = sizeof addr;
+  char ipstr[INET6_ADDRSTRLEN];
+  int clientSocket = accept(serverSocket, (struct sockaddr *)&addr, &len);
+  if (addr.ss_family == AF_INET) {
+    struct sockaddr_in *s = (struct sockaddr_in *)&addr;
+    port = ntohs(s->sin_port);
+    inet_ntop(AF_INET, &s->sin_addr, ipstr, sizeof ipstr);
+  } else { // AF_INET6
+    struct sockaddr_in6 *s = (struct sockaddr_in6 *)&addr;
+    port = ntohs(s->sin6_port);
+    inet_ntop(AF_INET6, &s->sin6_addr, ipstr, sizeof ipstr);
+  }
+  // end of protocol
+
+  std::string addressIpstr = ipstr;
   char buffer[1024] = {};
-  int clientSocket = accept(serverSocket, nullptr, nullptr);
+  std::string message = "Connected to ";
+  message += addressIpstr;
+  mvprintw(1, 1, message.c_str());
+  refresh();
   return clientSocket;
 }
 void Server::closeNetwork(int clientSocket) { close(clientSocket); }
