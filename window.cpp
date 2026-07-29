@@ -41,11 +41,11 @@ void windowFileRelated::putReadIntoScreen(std::string message, int height,
 
     if (WhosMessage == 'C')
       drawOnScreen(MyParts->left, MyParts, height, zdanie.c_str(), new_win,
-                   CreateDestroyWin);
+                   CreateDestroyWin, "You");
     else if (WhosMessage == 'S')
 
       drawOnScreen(MyParts->right, MyParts, height, zdanie.c_str(), new_win,
-                   CreateDestroyWin);
+                   CreateDestroyWin, "other");
     height += padding;
 
     countLine -= padding;
@@ -57,7 +57,8 @@ void windowFileRelated::putReadIntoScreen(std::string message, int height,
 void windowFileRelated::drawOnScreen(int side, WindowParts *MyParts,
                                      int &height, const char *msg,
                                      WINDOW *new_win,
-                                     windowShowProgra &CreateDestroyWin) {
+                                     windowShowProgra &CreateDestroyWin,
+                                     std::string who) {
 
   std::string tekst = msg;
   int primarySide = side;
@@ -133,6 +134,7 @@ while (height + 2 > MyParts->upper_window_height) { // THIS IS NOT GOOD
       box(textWindow, 0, 0);   /* 0, 0 gives default characters
                                 * for the vertical and horizontal
                                 * lines			*/
+      mvwprintw(textWindow, 0, 0, who.c_str());
     }
 
     wrefresh(new_win);

@@ -36,7 +36,7 @@ public:
                          windowShowProgra &CreateDestroyWin);
   void drawOnScreen(int side, WindowParts *MyParts, int &starty,
                     const char *msg, WINDOW *new_win,
-                    windowShowProgra &CreateDestroyWin);
+                    windowShowProgra &CreateDestroyWin, std::string who);
 };
 struct WindowParts {
 
