@@ -8,6 +8,24 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
+std::string connectAndGetIp(int &port, int serverSocket) {
+  struct sockaddr_storage addr;
+  socklen_t len = sizeof addr;
+  char ipstr[INET6_ADDRSTRLEN];
+  int clientSocket = accept(serverSocket, (struct sockaddr *)&addr, &len);
+  if (addr.ss_family == AF_INET) {
+    struct sockaddr_in *s = (struct sockaddr_in *)&addr;
+    port = ntohs(s->sin_port);
+    inet_ntop(AF_INET, &s->sin_addr, ipstr, sizeof ipstr);
+  } else { // AF_INET6
+    struct sockaddr_in6 *s = (struct sockaddr_in6 *)&addr;
+    port = ntohs(s->sin6_port);
+    inet_ntop(AF_INET6, &s->sin6_addr, ipstr, sizeof ipstr);
+  }
+
+  std::string addressIpstr = ipstr;
+  return addressIpstr;
+}
 int Server::initilizeNetwork(int port) {
 
   int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
@@ -31,25 +49,11 @@ int Server::initilizeNetwork(int port) {
   // for more check
   // https://stackoverflow.com/questions/2064636/getting-the-source-address-of-an-incoming-socket-connection
 
-  struct sockaddr_storage addr;
-  socklen_t len = sizeof addr;
-  char ipstr[INET6_ADDRSTRLEN];
-  int clientSocket = accept(serverSocket, (struct sockaddr *)&addr, &len);
-  if (addr.ss_family == AF_INET) {
-    struct sockaddr_in *s = (struct sockaddr_in *)&addr;
-    port = ntohs(s->sin_port);
-    inet_ntop(AF_INET, &s->sin_addr, ipstr, sizeof ipstr);
-  } else { // AF_INET6
-    struct sockaddr_in6 *s = (struct sockaddr_in6 *)&addr;
-    port = ntohs(s->sin6_port);
-    inet_ntop(AF_INET6, &s->sin6_addr, ipstr, sizeof ipstr);
-  }
   // end of protocol
-
-  std::string addressIpstr = ipstr;
+  std::string address = connectAndGetIp(port, serverSocket);
   char buffer[1024] = {};
   std::string message = "Connected to ";
-  message += addressIpstr;
+  message += address;
   mvprintw(1, 1, message.c_str());
   refresh();
   return clientSocket;
