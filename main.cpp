@@ -5,8 +5,6 @@
 int main() {
   GUI MyServerProgram;
   Server Internet;
-  int socket = Internet.initilizeNetwork();
-  MyServerProgram.guiFunc(Internet, socket);
-  Internet.closeNetwork(socket);
+  MyServerProgram.guiFunc(Internet);
   return 0;
 }

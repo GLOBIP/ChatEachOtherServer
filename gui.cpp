@@ -5,14 +5,15 @@
 #include <ncurses.h>
 #include <string>
 
-void makeWindow(windowShowProgra &myWindowProgram) {
+void makeWindow(windowShowProgra &myWindowProgram, Server &NetworkStuff,
+                int &socket) {
   struct FirstIpWindow {
     int height = 10;
     int width = 30;
     int starty = (LINES - height) / 2; /* Calculating for a center placement */
     int startx = (COLS - width) / 2;   /* of the window		*/
     const char *message1 = "Welcome to Server";
-    const char *message2 = "Press a key to continue";
+    const char *message2 = "Give Port";
   };
   WINDOW *my_win;
 
@@ -29,7 +30,8 @@ void makeWindow(windowShowProgra &myWindowProgram) {
   mvprintw(VarsWindow.starty + 2,
            VarsWindow.startx + strlen(VarsWindow.message2) / 6,
            VarsWindow.message2);
-  getch();
+  std::string port = NetworkStuff.catchInput(my_win);
+  socket = NetworkStuff.initilizeNetwork(std::stoi(port));
   myWindowProgram.destroy_win(my_win);
 }
 
@@ -114,14 +116,16 @@ void makeMainWindow(Server &NetworkStuff, windowFileRelated &WindowRelated,
   myWindowProgram.destroy_win(new_win);
 }
 
-void GUI::guiFunc(Server &NetworkStuff, int client) {
+void GUI::guiFunc(Server &NetworkStuff) {
 
   initscr();
   keypad(stdscr, TRUE);
   noecho();
   cbreak();
-  makeWindow(myWindowProgram);
-  makeMainWindow(NetworkStuff, myWindow, client, myfiles, myWindowProgram);
+  int socket{};
+  makeWindow(myWindowProgram, NetworkStuff, socket);
+  makeMainWindow(NetworkStuff, myWindow, socket, myfiles, myWindowProgram);
 
   endwin();
+  NetworkStuff.closeNetwork(socket);
 }

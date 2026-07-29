@@ -10,7 +10,8 @@ public:
   std::string readValue(int socket);
   void sendValue(int socket, const char *message);
   int clientSocket;
-  int initilizeNetwork();
+  int initilizeNetwork(int port);
+  std::string catchInput(WINDOW *my_win);
 };
 
 class windowShowProgra {
@@ -56,5 +57,5 @@ class GUI {
   windowFileRelated myWindow;
 
 public:
-  void guiFunc(Server &NetworkStuff, int client);
+  void guiFunc(Server &NetworkStuff);
 };

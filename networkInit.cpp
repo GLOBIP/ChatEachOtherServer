@@ -2,21 +2,19 @@
 #include <arpa/inet.h>
 #include <cstring>
 #include <iostream>
+#include <ncurses.h>
 #include <netinet/in.h>
 #include <stdlib.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
-int Server::initilizeNetwork() {
+int Server::initilizeNetwork(int port) {
 
   int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
 
   // specifying the address
   sockaddr_in serverAddress;
   serverAddress.sin_family = AF_INET;
-  long port = 49158;
-  std::cout << "current: " << port << '\n';
-  std::cin >> port;
   serverAddress.sin_port = htons(port);
   serverAddress.sin_addr.s_addr = INADDR_ANY;
 
@@ -42,4 +40,25 @@ std::string Server::readValue(int socket) {
 
 void Server::sendValue(int socket, const char *message) {
   send(socket, message, strlen(message), 0);
+}
+std::string Server::catchInput(WINDOW *my_win) {
+  int letter;
+  std::string message;
+  while (true) {
+    letter = getch();
+    if (letter == 10 || letter == KEY_ENTER) {
+      std::string messageOutput = "Selected: ";
+      messageOutput += message;
+      mvwprintw(my_win, 5, 3, messageOutput.c_str());
+      wrefresh(my_win);
+      return message;
+    } else if (letter == 127 || letter == KEY_BACKSPACE) {
+      message.pop_back();
+    } else if (letter >= 32 && letter <= 127) {
+      message.push_back(letter);
+    }
+    mvwprintw(my_win, 5, 3, message.c_str());
+    wrefresh(my_win);
+  }
+  clrtoeol();
 }
