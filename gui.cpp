@@ -24,12 +24,10 @@ void makeWindow(windowShowProgra &myWindowProgram, Server &NetworkStuff,
   my_win = myWindowProgram.create_newwin(VarsWindow.height, VarsWindow.width,
                                          VarsWindow.starty, VarsWindow.startx);
   refresh();
-  mvprintw(VarsWindow.starty + 1,
-           VarsWindow.startx + strlen(VarsWindow.message1) / 2,
-           VarsWindow.message1);
-  mvprintw(VarsWindow.starty + 2,
-           VarsWindow.startx + strlen(VarsWindow.message2) / 6,
-           VarsWindow.message2);
+
+  mvwprintw(my_win, 1, 7, VarsWindow.message1);
+  mvwprintw(my_win, 2, 11, VarsWindow.message2);
+  wrefresh(my_win);
   std::string port = NetworkStuff.catchInput(my_win);
   socket = NetworkStuff.initilizeNetwork(std::stoi(port));
   myWindowProgram.destroy_win(my_win);
