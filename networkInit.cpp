@@ -45,15 +45,14 @@ int Server::initilizeNetwork(int port) {
   // listening to the assigned socket
   listen(serverSocket, 5);
 
+  // clientSocket = accept(serverSocket, nullptr, nullptr); // TO DZIALA!!!
   // accepting connection request
   // socket accepting plus getting addres ip protocol
   // for more check
   // https://stackoverflow.com/questions/2064636/getting-the-source-address-of-an-incoming-socket-connection
-  int clientSocket;
-  // clientSocket = accept(serverSocket, nullptr, nullptr); // TO DZIALA!!!
-  char buffer[1024] = {};
   // end of protocol
 
+  int clientSocket;
   std::string address = connectAndGetIp(port, serverSocket, clientSocket);
   std::string message = "Connected to ";
   message += address;
