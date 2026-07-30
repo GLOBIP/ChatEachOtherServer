@@ -8,11 +8,12 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
-std::string connectAndGetIp(int &port, int serverSocket) {
+std::string connectAndGetIp(int &port, int serverSocket, int &clientSocket) {
   struct sockaddr_storage addr;
   socklen_t len = sizeof addr;
   char ipstr[INET6_ADDRSTRLEN];
-  int clientSocket = accept(serverSocket, (struct sockaddr *)&addr, &len);
+  clientSocket = accept(serverSocket, (struct sockaddr *)&addr, &len);
+
   if (addr.ss_family == AF_INET) {
     struct sockaddr_in *s = (struct sockaddr_in *)&addr;
     port = ntohs(s->sin_port);
@@ -48,10 +49,12 @@ int Server::initilizeNetwork(int port) {
   // socket accepting plus getting addres ip protocol
   // for more check
   // https://stackoverflow.com/questions/2064636/getting-the-source-address-of-an-incoming-socket-connection
-
-  // end of protocol
-  std::string address = connectAndGetIp(port, serverSocket);
+  int clientSocket;
+  // clientSocket = accept(serverSocket, nullptr, nullptr); // TO DZIALA!!!
   char buffer[1024] = {};
+  // end of protocol
+
+  std::string address = connectAndGetIp(port, serverSocket, clientSocket);
   std::string message = "Connected to ";
   message += address;
   mvprintw(1, 1, message.c_str());

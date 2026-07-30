@@ -37,7 +37,7 @@ void putText(windowShowProgra &myWindowProgram, WindowParts *windowVariables,
              int &height, std::string message, WINDOW *&new_win,
              windowFileRelated &WindowRelated, int &bottomHeightChat,
              windowShowProgra &CreateDestroyWin) {
-  init_pair(3, COLOR_BLACK, COLOR_BLUE);
+  init_pair(3, COLOR_WHITE, COLOR_BLACK);
   new_win = myWindowProgram.create_newwin(
       windowVariables->upper_window_height, windowVariables->width,
       windowVariables->starty, windowVariables->startx);
