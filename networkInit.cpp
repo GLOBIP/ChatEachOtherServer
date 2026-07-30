@@ -1,5 +1,6 @@
 #include "server.h"
 #include <arpa/inet.h>
+#include <cerrno>
 #include <cstring>
 #include <iostream>
 #include <ncurses.h>
@@ -8,6 +9,44 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
+void Err(std::string type) {
+  char bufferErr[256];
+  char *error =
+      strerror_r(errno, bufferErr,
+                 256); // get string message from errno, XSI-compliant version
+  std::cout << error;
+  std::string errorMsg = error;
+  if (type == "socket") {
+    if (errorMsg == "EACCES") {
+      printf("Access Denied");
+    } else if (errorMsg == "EAFNOSUPPORT")
+      printf("No support IPv6");
+  }
+
+  else if (type == "bind") {
+    if (errorMsg == "EACCES")
+      printf("Address protected, user not superuser/root");
+    else if (errorMsg == "EADDRINUSE") {
+      printf("address already used");
+    } else if (errorMsg == "EADDRINUSE") {
+      printf("all port used");
+    }
+  } else if (type == "listen") {
+    if (errorMsg == "EADDRINUSE")
+      printf("another socket already listens");
+  } else if (type == "connection") {
+    if (errorMsg == "EAGAIN" || errorMsg == "EWOULDBLOCK")
+      printf("socket is marked nonblocking and no connection are present to be "
+             "accepted");
+    if (errorMsg == "ECONNABORTED")
+      printf("connection has been aborted");
+    if (errorMsg == "ENOTSOCK")
+      printf("sockfd is not a socket");
+    if (errorMsg == "EPERM")
+      printf("FIREWALL BLOCKS");
+  }
+  exit(1);
+}
 std::string connectAndGetIp(int &port, int serverSocket, int &clientSocket) {
   struct sockaddr_storage addr;
   socklen_t len = sizeof addr;
@@ -27,9 +66,13 @@ std::string connectAndGetIp(int &port, int serverSocket, int &clientSocket) {
   std::string addressIpstr = ipstr;
   return addressIpstr;
 }
+
 int Server::initilizeNetwork(int port) {
 
   int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
+  if (serverSocket == -1) {
+    Err("socket");
+  }
 
   // specifying the address
   sockaddr_in serverAddress;
@@ -40,10 +83,15 @@ int Server::initilizeNetwork(int port) {
                   // available interfaces.
 
   // binding socket.
-  bind(serverSocket, (struct sockaddr *)&serverAddress, sizeof(serverAddress));
+  int bindNum = bind(serverSocket, (struct sockaddr *)&serverAddress,
+                     sizeof(serverAddress));
+  if (bindNum == -1)
+    Err("bind");
 
   // listening to the assigned socket
-  listen(serverSocket, 5);
+  int listenNum = listen(serverSocket, 5);
+  if (listenNum == -1)
+    Err("listen");
 
   // clientSocket = accept(serverSocket, nullptr, nullptr); // TO DZIALA!!!
   // accepting connection request
