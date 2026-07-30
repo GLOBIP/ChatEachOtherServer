@@ -16,13 +16,12 @@ void makeWindow(windowShowProgra &myWindowProgram, Server &NetworkStuff,
     const char *message2 = "Give Port";
   };
   WINDOW *my_win;
-
   FirstIpWindow VarsWindow;
-
   refresh();
-
+  init_pair(1, COLOR_BLACK, COLOR_CYAN);
   my_win = myWindowProgram.create_newwin(VarsWindow.height, VarsWindow.width,
                                          VarsWindow.starty, VarsWindow.startx);
+  wbkgd(my_win, COLOR_PAIR(1));
   refresh();
 
   mvwprintw(my_win, 1, 7, VarsWindow.message1);
@@ -38,9 +37,11 @@ void putText(windowShowProgra &myWindowProgram, WindowParts *windowVariables,
              int &height, std::string message, WINDOW *&new_win,
              windowFileRelated &WindowRelated, int &bottomHeightChat,
              windowShowProgra &CreateDestroyWin) {
+  init_pair(3, COLOR_BLACK, COLOR_BLUE);
   new_win = myWindowProgram.create_newwin(
       windowVariables->upper_window_height, windowVariables->width,
       windowVariables->starty, windowVariables->startx);
+  wbkgd(new_win, COLOR_PAIR(3));
   WindowRelated.putReadIntoScreen(message, height, windowVariables, new_win,
                                   bottomHeightChat, CreateDestroyWin);
   wrefresh(new_win);
@@ -71,6 +72,8 @@ void makeMainWindow(Server &NetworkStuff, windowFileRelated &WindowRelated,
   under_win = myWindowProgram.create_newwin(
       windowVariables.under_window_height, windowVariables.width,
       windowVariables.height, windowVariables.startx);
+  init_pair(4, COLOR_BLACK, COLOR_CYAN);
+  wbkgd(under_win, COLOR_PAIR(4));
   nodelay(new_win, true);
   nodelay(under_win, true);
   nodelay(stdscr, true);
@@ -117,6 +120,9 @@ void makeMainWindow(Server &NetworkStuff, windowFileRelated &WindowRelated,
 void GUI::guiFunc(Server &NetworkStuff) {
 
   initscr();
+  start_color();
+  init_pair(2, COLOR_BLACK, COLOR_BLUE);
+  bkgd(COLOR_PAIR(2));
   keypad(stdscr, TRUE);
   noecho();
   cbreak();
