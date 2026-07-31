@@ -1,6 +1,7 @@
 #include "server.h"
 #include <arpa/inet.h>
 #include <cerrno>
+#include <cstdio>
 #include <cstring>
 #include <iostream>
 #include <ncurses.h>
@@ -44,6 +45,26 @@ void Err(std::string type) {
       printf("sockfd is not a socket");
     if (errorMsg == "EPERM")
       printf("FIREWALL BLOCKS");
+  } else if (type == "recv") {
+    if (errorMsg == "EAGAIN" || errorMsg == "EWOULDBLOCK")
+      printf(
+          "socket is amrked nonblocking and recieve operation would block or "
+          "too late arrived");
+    if (errorMsg == "ECONNREFUSED")
+      printf("A remote host refused to allow the network connection typically "
+             "because it is not running the requested service");
+  } else if (type == "send") {
+    if (errorMsg == "EACCES")
+      printf("write permission is denied on the destination socket file");
+    if (errorMsg == "EBADF")
+      printf("invalid descriptor");
+    if (errorMsg == "EISCONN")
+      printf("connection-mode socket was connected already but a recipient was "
+             "specified");
+    if (errorMsg == "ENOTCONN")
+      printf("socket not connected no target");
+    if (errorMsg == "ENOTSOCK")
+      printf("problem with socket");
   }
   exit(1);
 }
@@ -108,17 +129,10 @@ int Server::initilizeNetwork(int port) {
   refresh();
   return clientSocket;
 }
-void Server::closeNetwork(int clientSocket) { close(clientSocket); }
-
-std::string Server::readValue(int socket) {
-  char buffer[1024] = {0};
-  ssize_t recieve = recv(socket, buffer, sizeof(buffer), MSG_DONTWAIT);
-  std::string StringBuffer = buffer;
-  return StringBuffer;
-}
-
 void Server::sendValue(int socket, const char *message) {
-  send(socket, message, strlen(message), 0);
+  ssize_t sender = send(socket, message, strlen(message), 0);
+  if (sender == -1)
+    Err("send");
 }
 std::string Server::catchInput(WINDOW *my_win) {
   int letter;
@@ -132,12 +146,22 @@ std::string Server::catchInput(WINDOW *my_win) {
       wrefresh(my_win);
       return message;
     } else if (letter == 127 || letter == KEY_BACKSPACE) {
-      message.pop_back();
+      if (!message.empty())
+        message.pop_back();
     } else if (letter >= 32 && letter <= 127) {
       message.push_back(letter);
     }
     mvwprintw(my_win, 5, 3, message.c_str());
     wrefresh(my_win);
+    wclrtoeol(my_win);
   }
-  clrtoeol();
 }
+std::string Server::readValue(int socket) {
+  char buffer[1024] = {0};
+  ssize_t recieve = recv(socket, buffer, sizeof(buffer), MSG_DONTWAIT);
+  if (recieve == -1)
+    Err("recv");
+  std::string StringBuffer = buffer;
+  return StringBuffer;
+}
+void Server::closeNetwork(int clientSocket) { close(clientSocket); }
