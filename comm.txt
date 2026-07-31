@@ -28,3 +28,18 @@ o siema!
 Client
 Thu Jul 30 20:52:33 2026
 wa
+Client
+Fri Jul 31 16:58:33 2026
+siema
+Client
+Fri Jul 31 17:04:49 2026
+siema
+Client
+Fri Jul 31 17:04:55 2026
+siema
+Client
+Fri Jul 31 17:12:05 2026
+siema
+Client
+Fri Jul 31 17:12:08 2026
+jak tam?
