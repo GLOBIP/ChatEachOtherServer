@@ -8,10 +8,11 @@
 void makeWindow(windowShowProgra &myWindowProgram, Server &NetworkStuff,
                 int &socket) {
   struct FirstIpWindow {
-    int height = 10;
-    int width = 30;
-    int starty = (LINES - height) / 2; /* Calculating for a center placement */
-    int startx = (COLS - width) / 2;   /* of the window		*/
+    const int height = 10;
+    const int width = 30;
+    const int starty =
+        (LINES - height) / 2; /* Calculating for a center placement */
+    const int startx = (COLS - width) / 2; /* of the window		*/
     const char *message1 = "Welcome to Server";
     const char *message2 = "Give Port";
   };

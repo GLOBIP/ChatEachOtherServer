@@ -17,8 +17,6 @@ void windowFileRelated::putReadIntoScreen(std::string message, int height,
                                           WindowParts *MyParts, WINDOW *new_win,
                                           int &bottomheightChat,
                                           windowShowProgra &CreateDestroyWin) {
-
-  std::ifstream plikOtworz("comm.txt", std::ios::in);
   int y{};
   int originHeight = height;
   std::string zdanie = "";
@@ -26,6 +24,14 @@ void windowFileRelated::putReadIntoScreen(std::string message, int height,
   bool isSecondTime{false};
   int countLine{0};
   int padding{5};
+
+  std::ifstream plikOtworz("comm.txt", std::ios::in);
+  if (!plikOtworz.is_open()) {
+    printf("file non existing");
+    std::ofstream makeNewFile("comm.txt");
+    makeNewFile.close();
+  }
+
   while (std::getline(plikOtworz, zdanie)) {
     checkRead(WhosMessage, zdanie);
     bool clientServerOr = (zdanie == "Client" || zdanie == "Server");
@@ -54,12 +60,12 @@ void windowFileRelated::putReadIntoScreen(std::string message, int height,
   bottomheightChat = countLine + padding * 3;
   wrefresh(new_win);
 }
+
 void windowFileRelated::drawOnScreen(int side, WindowParts *MyParts,
                                      int &height, const char *msg,
                                      WINDOW *new_win,
                                      windowShowProgra &CreateDestroyWin,
                                      std::string who) {
-
   std::string tekst = msg;
   int primarySide = side;
   std::string tekst2 = "";
@@ -68,13 +74,8 @@ void windowFileRelated::drawOnScreen(int side, WindowParts *MyParts,
   std::vector<int> heightVec = {};             // for readen text height of each
   int right = MyParts->width;
   int middlescr = MyParts->width / 2;
-  for (;;) {
-    /*
-while (height + 2 > MyParts->upper_window_height) { // THIS IS NOT GOOD
-  // starting point of text tab lmao
-  height -= 2;
-}*/
 
+  for (;;) {
     if (side + tekst.size() >= right) {
       side--;
       continue;
@@ -112,33 +113,37 @@ while (height + 2 > MyParts->upper_window_height) { // THIS IS NOT GOOD
     sideVec.push_back(side);
     heightVec.push_back(height);
     height++;
-  }
+    /*
+        WINDOW *textWindow; // pointer do jednego okna
+        // COS TU NIE DZIALA
+        bool once{true};
+        for (int i{}; i < tesktWriteVec.size(); i++) { // po kawalkach tekstu
+       lecimy if (heightVec.at(i) < 1) { continue;
+            // text is too height , save it in another file?
+          } else if (heightVec.at(i) > MyParts->upper_window_height + 4) {
+            continue;
+          }
+          try {
+            if (once) {
+              textWindow = subwin(
+                  new_win, 3 * tesktWriteVec.size(),
+                  tesktWriteVec.at(0).size() + 5, // takes tekstwrite num and *3
+       //
+                                                  // width is size of first plus
+       5 heightVec.at(0) - 5, // height is height of first - 5 on the top
+                  sideVec.at(0));      //  and side is side
+              box(textWindow, 0, 0);
+              mvwprintw(textWindow, 0, 0, who.c_str());
+            }
 
-  WINDOW *textWindow; // pointer do jednego okna
-
-  bool once{true};
-  for (int i{}; i < tesktWriteVec.size(); i++) { // po kawalkach tekstu lecimy
-    if (heightVec.at(i) < 1) {
-      continue;
-      // text is too height , save it in another file?
-    } else if (heightVec.at(i) > MyParts->upper_window_height + 4) {
-      continue;
-    }
-    if (once) {
-      textWindow = subwin(
-          new_win, 3 * tesktWriteVec.size(),
-          tesktWriteVec.at(0).size() +
-              5, // takes tekstwrite num and *3 // width is size of first plus 5
-          heightVec.at(0) - 5, // height is height of first - 5 on the top
-          sideVec.at(0));      //  and side is side
-      box(textWindow, 0, 0);   /* 0, 0 gives default characters
-                                * for the vertical and horizontal
-                                * lines			*/
-      mvwprintw(textWindow, 0, 0, who.c_str());
-    }
-
-    wrefresh(new_win);
-    mvwprintw(textWindow, 1, 3, tesktWriteVec.at(i).c_str());
-    wrefresh(textWindow);
+            wrefresh(new_win);
+            mvwprintw(textWindow, 1, 3, tesktWriteVec.at(i).c_str());
+            wrefresh(textWindow);
+          } catch (int i) {
+            printf("there is error while making sub");
+            endwin();
+            exit(1);
+          }
+        }*/
   }
 }

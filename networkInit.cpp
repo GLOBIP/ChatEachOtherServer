@@ -15,7 +15,6 @@ void Err(std::string type) {
   char *error =
       strerror_r(errno, bufferErr,
                  256); // get string message from errno, XSI-compliant version
-  std::cout << error;
   std::string errorMsg = error;
   if (type == "socket") {
     if (errorMsg == "EACCES") {
@@ -53,6 +52,9 @@ void Err(std::string type) {
     if (errorMsg == "ECONNREFUSED")
       printf("A remote host refused to allow the network connection typically "
              "because it is not running the requested service");
+    if (errorMsg ==
+        "Resource temporarily unavailable") // NOTHING HAPPENED STILL DO PROGRAM
+      return;                               // STILL GOES
   } else if (type == "send") {
     if (errorMsg == "EACCES")
       printf("write permission is denied on the destination socket file");
@@ -66,6 +68,8 @@ void Err(std::string type) {
     if (errorMsg == "ENOTSOCK")
       printf("problem with socket");
   }
+  endwin();
+  std::cout << error << " while doing " << type;
   exit(1);
 }
 std::string connectAndGetIp(int &port, int serverSocket, int &clientSocket) {
@@ -130,7 +134,7 @@ int Server::initilizeNetwork(int port) {
   return clientSocket;
 }
 void Server::sendValue(int socket, const char *message) {
-  ssize_t sender = send(socket, message, strlen(message), 0);
+  ssize_t sender = send(socket, message, strlen(message), MSG_DONTWAIT);
   if (sender == -1)
     Err("send");
 }
