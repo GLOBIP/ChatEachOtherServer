@@ -38,8 +38,16 @@ void windowShowProgra::catchKeyboard(WindowParts under_winParts,
 
   else if (letter == '|')
     message = 0;
-  else if (letter >= 32 && letter <= 127) {
-    sendMessage.push_back(letter);
+  if (sendMessage.size() <= 1023) {
+    if (letter >= 32 && letter <= 127) {
+      sendMessage.push_back(letter);
+    }
+  } else {
+    mvwprintw(under_win, under_winParts.under_window_height / 2, 1,
+              "Too large message");
+    wrefresh(under_win);
+    wclrtoeol(under_win);
+    return;
   }
 
   wclrtoeol(under_win);

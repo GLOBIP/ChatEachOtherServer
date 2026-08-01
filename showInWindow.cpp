@@ -127,14 +127,15 @@ void windowFileRelated::drawOnScreen(int side, WindowParts *MyParts,
       }
       if (once) {
         textWindow = subwin(
-            new_win, 3 * tesktWriteVec.size(),
+            new_win,
+            2 * tesktWriteVec.size(), // idk what with that this has to has 2*
             tesktWriteVec.at(0).size() + 5, // takes tekstwrite num and *3 //
                                             // width is size of first plus 5
-            heightVec.at(0) - 5, // height is height of first - 5 on the top
-            sideVec.at(0));      //  and side is side
-        box(textWindow, 0, 0);   /* 0, 0 gives default characters
-                                  * for the vertical and horizontal
-                                  * lines			*/
+            heightVec.at(0),   // height is height of first - 5 on the top
+            sideVec.at(0));    //  and side is side
+        box(textWindow, 0, 0); /* 0, 0 gives default characters
+                                * for the vertical and horizontal
+                                * lines			*/
         mvwprintw(textWindow, 0, 0, who.c_str());
       }
       wrefresh(new_win);

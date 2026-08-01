@@ -49,3 +49,18 @@ siema
 Client
 Fri Jul 31 21:56:21 2026
 o siema
+Server
+Sat Aug  1 12:41:23 2026
+siema
+Client
+Sat Aug  1 12:41:27 2026
+o siema
+Client
+Sat Aug  1 12:41:31 2026
+jak tam?
+Client
+Sat Aug  1 12:49:55 2026
+siemaaa
+Server
+Sat Aug  1 12:49:58 2026
+o siema!
